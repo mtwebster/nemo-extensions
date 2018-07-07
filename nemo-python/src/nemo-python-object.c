@@ -83,7 +83,7 @@ static GObjectClass *parent_class;
 #define HANDLE_LIST(py_ret, type, type_name)                           \
     {                                                                  \
         Py_ssize_t i = 0;                                              \
-    	if (!PySequence_Check(py_ret) || PyString_Check(py_ret))       \
+    	if (!PySequence_Check(py_ret) || PyUnicode_Check(py_ret))       \
     	{                                                              \
     		PyErr_SetString(PyExc_TypeError,                           \
     						METHOD_NAME " must return a sequence");    \
@@ -159,14 +159,14 @@ nemo_python_object_get_name_and_desc (NemoNameAndDescProvider *provider)
         {
             PyObject *py_item;
             py_item = PySequence_GetItem (py_ret, i);
-            if (!PyString_Check(py_item))
+            if (!PyUnicode_Check(py_item))
             {
                 PyErr_SetString(PyExc_TypeError,
                                 METHOD_NAME
                                 " must return a sequence of strings");
                 goto beach;
             }
-            ret = g_list_append (ret, (gchar *) PyString_AsString(py_item));
+            ret = g_list_append (ret, (gchar *) PyUnicode_AsUTF8(py_item));
             Py_DECREF(py_item);
         }
  beach:
@@ -177,7 +177,7 @@ nemo_python_object_get_name_and_desc (NemoNameAndDescProvider *provider)
 #undef METHOD_NAME
 
 static void
-nemo_python_object_name_and_desc_provider_iface_init (NemoNameAndDescProviderIface *iface)
+nemo_python_object_name_and_desc_provider_iface_init (NemoNameAndDescProviderInterface *iface)
 {
     iface->get_name_and_desc = nemo_python_object_get_name_and_desc;
 }
@@ -214,7 +214,7 @@ nemo_python_object_get_property_pages (NemoPropertyPageProvider *provider,
 
 
 static void
-nemo_python_object_property_page_provider_iface_init (NemoPropertyPageProviderIface *iface)
+nemo_python_object_property_page_provider_iface_init (NemoPropertyPageProviderInterface *iface)
 {
 	iface->get_pages = nemo_python_object_get_property_pages;
 }
@@ -237,7 +237,7 @@ nemo_python_object_get_widget (NemoLocationWidgetProvider *provider,
 	CHECK_OBJECT(object);
 	CHECK_METHOD_NAME(object->instance);
 
-	py_uri = PyString_FromString(uri);
+	py_uri = PyUnicode_FromString(uri);
 
 	py_ret = PyObject_CallMethod(object->instance, METHOD_PREFIX METHOD_NAME,
 								 "(NN)", py_uri,
@@ -261,7 +261,7 @@ nemo_python_object_get_widget (NemoLocationWidgetProvider *provider,
 #undef METHOD_NAME
 
 static void
-nemo_python_object_location_widget_provider_iface_init (NemoLocationWidgetProviderIface *iface)
+nemo_python_object_location_widget_provider_iface_init (NemoLocationWidgetProviderInterface *iface)
 {
 	iface->get_widget = nemo_python_object_get_widget;
 }
@@ -363,7 +363,7 @@ nemo_python_object_get_background_items (NemoMenuProvider *provider,
 #undef METHOD_NAME
 
 static void
-nemo_python_object_menu_provider_iface_init (NemoMenuProviderIface *iface)
+nemo_python_object_menu_provider_iface_init (NemoMenuProviderInterface *iface)
 {
 	iface->get_background_items = nemo_python_object_get_background_items;
 	iface->get_file_items = nemo_python_object_get_file_items;
@@ -399,7 +399,7 @@ nemo_python_object_get_columns (NemoColumnProvider *provider)
 #undef METHOD_NAME
 
 static void
-nemo_python_object_column_provider_iface_init (NemoColumnProviderIface *iface)
+nemo_python_object_column_provider_iface_init (NemoColumnProviderInterface *iface)
 {
 	iface->get_columns = nemo_python_object_get_columns;
 }
@@ -487,14 +487,14 @@ nemo_python_object_update_file_info (NemoInfoProvider 		*provider,
 	
 	HANDLE_RETVAL(py_ret);
 
-	if (!PyInt_Check(py_ret))
+	if (!PyLong_Check(py_ret))
 	{
 		PyErr_SetString(PyExc_TypeError,
 						METHOD_NAME " must return None or a int");
 		goto beach;
 	}
 
-	ret = PyInt_AsLong(py_ret);
+	ret = PyLong_AsLong(py_ret);
 	
  beach:
  	free_pygobject_data(file, NULL);
@@ -505,7 +505,7 @@ nemo_python_object_update_file_info (NemoInfoProvider 		*provider,
 #undef METHOD_NAME
 
 static void
-nemo_python_object_info_provider_iface_init (NemoInfoProviderIface *iface)
+nemo_python_object_info_provider_iface_init (NemoInfoProviderInterface *iface)
 {
 	iface->cancel_update = nemo_python_object_cancel_update;
 	iface->update_file_info = nemo_python_object_update_file_info;
@@ -590,7 +590,7 @@ nemo_python_object_get_type (GTypeModule *module,
         NULL
     };
 
-	debug_enter_args("type=%s", PyString_AsString(PyObject_GetAttrString(type, "__name__")));
+	debug_enter_args("type=%s", PyUnicode_AsUTF8(PyObject_GetAttrString(type, "__name__")));
 	info = g_new0 (GTypeInfo, 1);
 	
 	info->class_size = sizeof (NemoPythonObjectClass);
@@ -602,7 +602,7 @@ nemo_python_object_get_type (GTypeModule *module,
 	Py_INCREF(type);
 
 	type_name = g_strdup_printf("%s+NemoPython",
-								PyString_AsString(PyObject_GetAttrString(type, "__name__")));
+								PyUnicode_AsUTF8(PyObject_GetAttrString(type, "__name__")));
 		
 	gtype = g_type_module_register_type (module, 
 										 G_TYPE_OBJECT,
