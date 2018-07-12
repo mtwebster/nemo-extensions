@@ -177,7 +177,7 @@ nemo_python_object_get_name_and_desc (NemoNameAndDescProvider *provider)
 #undef METHOD_NAME
 
 static void
-nemo_python_object_name_and_desc_provider_iface_init (NemoNameAndDescProviderInterface *iface)
+nemo_python_object_name_and_desc_provider_iface_init (NemoNameAndDescProviderIface *iface)
 {
     iface->get_name_and_desc = nemo_python_object_get_name_and_desc;
 }
@@ -214,7 +214,7 @@ nemo_python_object_get_property_pages (NemoPropertyPageProvider *provider,
 
 
 static void
-nemo_python_object_property_page_provider_iface_init (NemoPropertyPageProviderInterface *iface)
+nemo_python_object_property_page_provider_iface_init (NemoPropertyPageProviderIface *iface)
 {
 	iface->get_pages = nemo_python_object_get_property_pages;
 }
@@ -261,7 +261,7 @@ nemo_python_object_get_widget (NemoLocationWidgetProvider *provider,
 #undef METHOD_NAME
 
 static void
-nemo_python_object_location_widget_provider_iface_init (NemoLocationWidgetProviderInterface *iface)
+nemo_python_object_location_widget_provider_iface_init (NemoLocationWidgetProviderIface *iface)
 {
 	iface->get_widget = nemo_python_object_get_widget;
 }
@@ -363,7 +363,7 @@ nemo_python_object_get_background_items (NemoMenuProvider *provider,
 #undef METHOD_NAME
 
 static void
-nemo_python_object_menu_provider_iface_init (NemoMenuProviderInterface *iface)
+nemo_python_object_menu_provider_iface_init (NemoMenuProviderIface *iface)
 {
 	iface->get_background_items = nemo_python_object_get_background_items;
 	iface->get_file_items = nemo_python_object_get_file_items;
@@ -399,7 +399,7 @@ nemo_python_object_get_columns (NemoColumnProvider *provider)
 #undef METHOD_NAME
 
 static void
-nemo_python_object_column_provider_iface_init (NemoColumnProviderInterface *iface)
+nemo_python_object_column_provider_iface_init (NemoColumnProviderIface *iface)
 {
 	iface->get_columns = nemo_python_object_get_columns;
 }
@@ -505,7 +505,7 @@ nemo_python_object_update_file_info (NemoInfoProvider 		*provider,
 #undef METHOD_NAME
 
 static void
-nemo_python_object_info_provider_iface_init (NemoInfoProviderInterface *iface)
+nemo_python_object_info_provider_iface_init (NemoInfoProviderIface *iface)
 {
 	iface->cancel_update = nemo_python_object_cancel_update;
 	iface->update_file_info = nemo_python_object_update_file_info;
