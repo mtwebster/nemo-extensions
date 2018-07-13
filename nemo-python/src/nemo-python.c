@@ -254,7 +254,7 @@ nemo_module_initialize(GTypeModule *module)
 	all_types = g_array_new(FALSE, FALSE, sizeof(GType));
 
 	// Look in the new global path, $DATADIR/nemo-python/extensions
-	nemo_python_load_dir(module, DATA_DIR "/nemo-python/extensions");
+	nemo_python_load_dir(module, PYTHON_EXTENSION_DIR);
 
 	// Look in XDG_DATA_DIR, ~/.local/share/nemo-python/extensions
 	user_extensions_dir = g_build_filename(g_get_user_data_dir(), 
